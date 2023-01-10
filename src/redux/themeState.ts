@@ -9,9 +9,8 @@ export interface IUseThemeState {
 export const useThemeState = create<IUseThemeState>()(
   devtools(
     (set) => ({
-      mode: "light",
+      mode: "dark",
       setMode: (mode) => {
-        console.log("set mode");
         set(
           (state) => ({
             ...state,
