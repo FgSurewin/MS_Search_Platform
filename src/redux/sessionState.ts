@@ -1,7 +1,10 @@
 import create from "zustand";
 import { devtools } from "zustand/middleware";
+import { ISearchUnit } from "../types";
+import { Randomizer } from "../utils/randomizer";
 
 export interface IUseSessionState {
+  searchUnit: ISearchUnit;
   selectedDimensions: string[];
   selectedProducts: {
     name: string;
@@ -12,13 +15,14 @@ export interface IUseSessionState {
     dimension: string,
     newValue: string
   ) => void;
-  finalDecision?: string;
+  finalDecision: string;
   updateFinalDecision: (value: string) => void;
 }
 
 export const useSessionState = create<IUseSessionState>()(
   devtools(
     (set) => ({
+      searchUnit: Randomizer.randomSearchUnitAssignment(),
       selectedDimensions: ["dimension_1", "dimension_2", "dimension_3"],
       selectedProducts: [
         {

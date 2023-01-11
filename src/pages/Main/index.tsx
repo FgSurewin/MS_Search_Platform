@@ -1,9 +1,14 @@
 import React from "react";
-import { Paper, Grid, Divider } from "@mui/material";
+import { Paper, Divider } from "@mui/material";
+import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
 import InfoPanel from "./InfoPanel";
 import TablePanel from "./TablePanel";
+import { useSessionState } from "../../redux/sessionState";
+import BingSearch from "../../components/BingSearch";
+import ChatGPT from "../../components/ChatGPT";
 
 export default function MainPage() {
+  const { searchUnit } = useSessionState();
   return (
     <Paper
       sx={{
@@ -19,34 +24,31 @@ export default function MainPage() {
           overflow: "auto",
         }}
       >
-        <Grid item container xs={12} sm={6} direction="column">
-          <Grid item xs={6}>
+        <Grid xs={12} sm={6} direction="column">
+          <Grid xs={12}>
             <InfoPanel />
           </Grid>
           <Grid
-            item
             component={Divider}
             orientation="horizontal"
             flexItem
             sx={{ display: { xs: "none", sm: "block" } }}
           />
-          <Grid item xs={5}>
+          <Grid xs={12}>
             <TablePanel />
           </Grid>
         </Grid>
         <Grid
-          item
           component={Divider}
           orientation="vertical"
           flexItem
           sx={{ display: { xs: "none", sm: "block" } }}
         />
-        <Grid item xs={12} sm={5}>
-          Right
+        <Grid xs={12} sm>
+          {searchUnit === "Bing" ? <BingSearch /> : <ChatGPT />}
         </Grid>
       </Grid>
     </Paper>
   );
 }
 
-// <Divider  flexItem sx={{ xs: 0 }}></Divider>

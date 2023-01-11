@@ -8,25 +8,11 @@ import {
   TableBody,
   Box,
   Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
 } from "@mui/material";
 import { useSessionState } from "../../redux/sessionState";
 import { useThemeState } from "../../redux/themeState";
-import Slide from "@mui/material/Slide";
-import { TransitionProps } from "@mui/material/transitions";
-
-const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & {
-    children: React.ReactElement;
-  },
-  ref: React.Ref<unknown>
-) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import BasicDialog from "../Dialog/BasicDialog";
+import { useNavigate } from "react-router-dom";
 
 export default function EditableTable() {
   const {
@@ -36,6 +22,8 @@ export default function EditableTable() {
     finalDecision,
     updateFinalDecision,
   } = useSessionState();
+
+  const naviagte = useNavigate();
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = (product: string) => {
@@ -45,6 +33,11 @@ export default function EditableTable() {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleSubmit = () => {
+    setOpen(false);
+    naviagte("/survey");
   };
 
   return (
@@ -98,26 +91,14 @@ export default function EditableTable() {
           ))}
         </TableBody>
       </Table>
-      <Dialog
+      <BasicDialog
         open={open}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={handleClose}
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle>{"Confirmation"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            {`Have you decided to buy ${finalDecision}?`}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Yes</Button>
-          <Button color="error" onClick={handleClose}>
-            No
-          </Button>
-        </DialogActions>
-      </Dialog>
+        handleClose={handleClose}
+        title="Confirmation"
+        description="Have you decided to buy"
+        finalDecision={finalDecision}
+        handleSubmit={handleSubmit}
+      />
     </TableContainer>
   );
 }

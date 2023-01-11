@@ -25,9 +25,9 @@ export default function ThemeToggler() {
         color="inherit"
       >
         {mode === "light" ? (
-          <Brightness4 fontSize="large" />
+          <Brightness4 fontSize="medium" />
         ) : (
-          <Brightness7 fontSize="large" />
+          <Brightness7 fontSize="medium" />
         )}
       </IconButton>
     </Box>
