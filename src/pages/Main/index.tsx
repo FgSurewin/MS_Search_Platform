@@ -44,7 +44,11 @@ export default function MainPage() {
           flexItem
           sx={{ display: { xs: "none", sm: "block" } }}
         />
-        <Grid xs={12} sm>
+        <Grid
+          xs={12}
+          sm
+          sx={{ width: "100%", height: "100%", overflowY: "scroll" }}
+        >
           {searchUnit === "Bing" ? <BingSearch /> : <ChatGPT />}
         </Grid>
       </Grid>

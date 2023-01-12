@@ -1,0 +1,100 @@
+[
+  {
+    "make": "Toyota",
+    "model": "RAV4",
+    "trim": "LE FWD (Natl)",
+    "cargo_space": 69.8,
+    "length": 180.9
+  },
+  {
+    "make": "Jeep",
+    "model": "Grand Cherokee",
+    "trim": "Laredo 4x2",
+    "cargo_space": 68.3,
+    "length": 189.8
+  },
+  {
+    "make": "Toyota",
+    "model": "Highlander",
+    "trim": "L FWD (Natl)",
+    "cargo_space": 84.3,
+    "length": 194.9
+  },
+  {
+    "make": "Chevrolet",
+    "model": "Equinox",
+    "trim": "FWD 4dr LT w/3LT",
+    "cargo_space": 63.9,
+    "length": 183.1
+  },
+  {
+    "make": "Honda",
+    "model": "CR-V",
+    "trim": "LX 2WD",
+    "cargo_space": 75.8,
+    "length": 182.1
+  },
+  {
+    "make": "Ford",
+    "model": "Explorer",
+    "trim": "Base RWD",
+    "cargo_space": 87.8,
+    "length": 198.8
+  },
+  {
+    "make": "Nissan",
+    "model": "Rogue",
+    "trim": "FWD S",
+    "cargo_space": 70.0,
+    "length": 184.5
+  },
+  {
+    "make": "Mazda",
+    "model": "CX-5",
+    "trim": "Sport FWD",
+    "cargo_space": 59.6,
+    "length": 179.1
+  },
+  {
+    "make": "Subaru",
+    "model": "Outback",
+    "trim": "CVT",
+    "cargo_space": 75.7,
+    "length": 191.3
+  },
+  {
+    "make": "Toyota",
+    "model": "4Runner",
+    "trim": "SR5 2WD (Natl)",
+    "cargo_space": 89.7,
+    "length": 190.2
+  },
+  {
+    "make": "Hyundai",
+    "model": "Santa Fe",
+    "trim": "SE 2.4L Auto FWD",
+    "cargo_space": 71.3,
+    "length": 187.8
+  },
+  {
+    "make": "Kia",
+    "model": "Sportage",
+    "trim": "LX FWD",
+    "cargo_space": 60.1,
+    "length": 176.4
+  },
+  {
+    "make": "GMC",
+    "model": "Terrain",
+    "trim": "FWD 4dr SLE Diesel *Ltd Avail*",
+    "cargo_space": 63.3,
+    "length": 182.3
+  },
+  {
+    "make": "Kia",
+    "model": "Telluride",
+    "trim": "LX FWD",
+    "cargo_space": 87.0,
+    "length": 196.9
+  }
+]
