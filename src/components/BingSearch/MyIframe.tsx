@@ -22,10 +22,13 @@ const MyIframe = ({ url }: IMyIframe) => {
       ref={iframeRef}
       src={url}
       style={{
-        width: "100%",
-        height: "100%",
+        width: "92%",
+        height: "90%",
+        position: "absolute",
+        top: "2%",
+        left: "4%",
       }}
-      sandbox="allow-same-origin allow-pointer-lock"
+      sandbox="allow-same-origin allow-pointer-lock allow-scripts"
     />
   );
 };

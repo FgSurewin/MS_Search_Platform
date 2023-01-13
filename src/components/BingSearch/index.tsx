@@ -1,55 +1,78 @@
 import React from "react";
 import axios from "axios";
-import { Container, Paper, Box, Stack, Button, TextField } from "@mui/material";
+import { Container, Box, Stack, Button, TextField } from "@mui/material";
 import MyIframe from "./MyIframe";
+import { IBingSearchResonse, IWebPageValue } from "../../types";
+import LinkSlot from "./LinkSlot";
+// import { useIframeState } from "../../redux/iframeState";
 
 export default function BingSearch() {
   const [inputPrompt, setInputPrompt] = React.useState<string>("");
+  const [results, setResults] = React.useState<IWebPageValue[]>([]);
   const [openIframe, setOpenIframe] = React.useState<boolean>(false);
-  // const [results, setResults] = useState([]);
-  async function handleSearch(event?: React.FormEvent<HTMLFormElement>) {
-    event?.preventDefault();
+  const [iframeUrl, setIframeUrl] = React.useState<string>("");
+
+  // const { show, setShow, url, setUrl } = useIframeState();
+
+  // Handle bing search
+  async function handleSearch(input: string) {
+    // event?.preventDefault();
 
     try {
-      const res = await axios.request({
+      const res = await axios.request<IBingSearchResonse>({
         method: "GET",
-        url: `https://api.bing.microsoft.com/v7.0/search?q=test`,
+        url: `https://api.bing.microsoft.com/v7.0/search`,
+        params: {
+          q: input,
+          count: "30",
+        },
         headers: {
           "Ocp-Apim-Subscription-Key": import.meta.env.VITE_BING_KEY,
           Accept: "application/json",
         },
       });
 
-      console.log(res);
-      // setResults(res.data.webPages.value);
+      // console.log(res.data);
+      setResults(res.data.webPages.value);
     } catch (err) {
       console.error(err);
     }
   }
-  React.useEffect(() => {
-    // handleSearch();
-  }, []);
+
+  // Handle link click
+  function handleLinkClick(url: string) {
+    console.log("Parent Clicking");
+
+    setOpenIframe(true);
+    setIframeUrl(url);
+  }
 
   return (
-    <Paper
+    <Box
       sx={{
         // bgcolor: "#343541",
         width: "100%",
         height: "100%",
         position: "relative",
-        overflowY: "auto",
+        // overflowY: "auto",
       }}
     >
-      <Container maxWidth="md">
+      <Container
+        maxWidth="md"
+        sx={{
+          position: "relative",
+        }}
+      >
         <Stack
           direction="row"
           spacing={2}
           sx={{
             textAlign: "center",
             py: 2,
-            position: "sticky",
+            // position: "absolute",
             top: 0,
             zIndex: 1,
+            mb: 2,
           }}
         >
           <TextField
@@ -67,64 +90,52 @@ export default function BingSearch() {
           <Button
             variant="contained"
             onClick={() => {
-              // query_answer(inputPrompt);
+              handleSearch(inputPrompt);
               //  Remove the prompt after submit
               setInputPrompt("");
             }}
           >
             Submit
           </Button>
-          <Button
-            variant="contained"
-            onClick={() => {
-              // query_answer(inputPrompt);
-              //  Remove the prompt after submit
-              setOpenIframe(true);
-            }}
-          >
-            open
-          </Button>
-          <Button
-            variant="contained"
-            onClick={() => {
-              // query_answer(inputPrompt);
-              //  Remove the prompt after submit
-              setOpenIframe(false);
-            }}
-          >
-            close
-          </Button>
+
+          {openIframe && (
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => {
+                setOpenIframe(false);
+              }}
+            >
+              close
+            </Button>
+          )}
+        </Stack>
+        <Stack>
+          {results.length > 0 &&
+            results.map((result) => (
+              <LinkSlot
+                key={result.id}
+                title={result.name}
+                handleLinkClick={() => {
+                  handleLinkClick(result.url);
+                }}
+                snippet={result.snippet}
+              />
+            ))}
         </Stack>
       </Container>
       <Box
         // className="iframe-container"
+        id="iframe-container"
         sx={{
           width: "80%",
           height: "90%",
           m: "auto",
-          position: "relative",
+          // position: "relative",
         }}
       >
-        {/* <Box
-          sx={{
-            width: "100%",
-            height: "100%",
-            zIndex: 10,
-            position: "absolute",
-          }}
-        /> */}
-        {/* <Box
-          component="iframe"
-          src="https://cheerio.js.org/"
-          sx={{
-            display: openIframe ? "block" : "none",
-            width: "100%",
-            height: "100%",
-            pointerEvents: "none",
-          }}
-        /> */}
-        {openIframe && <MyIframe url="https://cheerio.js.org/" />}
+        {openIframe && iframeUrl !== "" && <MyIframe url={iframeUrl} />}
       </Box>
-    </Paper>
+    </Box>
   );
 }

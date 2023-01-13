@@ -17,8 +17,8 @@ import { useNavigate } from "react-router-dom";
 export default function EditableTable() {
   const {
     selectedDimensions,
-    selectedProducts,
-    updateSelectedProducts,
+    userInputs,
+    updateUserInputs,
     finalDecision,
     updateFinalDecision,
   } = useSessionState();
@@ -50,39 +50,45 @@ export default function EditableTable() {
           <TableRow>
             <TableCell>Product</TableCell>
             {selectedDimensions.map((dimension, index) => (
-              <TableCell key={index} align="right">
+              <TableCell key={index} align="center">
                 {dimension}
               </TableCell>
             ))}
+            <TableCell>Ratio</TableCell>
             <TableCell>Decision</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {selectedProducts.map((product, index) => (
+          {userInputs.map((product, index) => (
             <TableRow
-              key={`${product.name} + ${index}`}
+              key={`${product.model} + ${index}`}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
               <TableCell component="th" scope="row">
-                {product.name}
+                {product.model}
               </TableCell>
               {selectedDimensions.map((dimension, index) => (
                 <TableCell
-                  key={`${product.name} + ${dimension} + ${index}`}
+                  key={`${product.model} + ${dimension} + ${index}`}
                   align="right"
                 >
                   <EditableTableCell
                     initValue={product[dimension]}
-                    productName={product.name}
+                    productName={product.model}
                     dimension={dimension}
-                    updateSelectedProducts={updateSelectedProducts}
+                    updateUserInputs={updateUserInputs}
                   />
                 </TableCell>
               ))}
               <TableCell component="th" scope="row">
+                {product.cargo_space > 0 && product.length > 0
+                  ? product.cargo_space / product.length
+                  : 0}
+              </TableCell>
+              <TableCell component="th" scope="row">
                 <Button
                   variant="contained"
-                  onClick={() => handleClickOpen(product.name)}
+                  onClick={() => handleClickOpen(product.model)}
                 >
                   Buy
                 </Button>
@@ -107,7 +113,7 @@ export interface IEditableTableCellProps {
   initValue: string | number;
   productName: string;
   dimension: string;
-  updateSelectedProducts: (
+  updateUserInputs: (
     productName: string,
     dimension: string,
     newValue: string
@@ -118,7 +124,7 @@ function EditableTableCell({
   initValue,
   productName,
   dimension,
-  updateSelectedProducts,
+  updateUserInputs,
 }: IEditableTableCellProps) {
   const { mode } = useThemeState();
   const [value, setValue] = React.useState(initValue.toString());
@@ -141,7 +147,7 @@ function EditableTableCell({
         setValue(e.target.value);
       }}
       onBlur={() => {
-        updateSelectedProducts(productName, dimension, value);
+        updateUserInputs(productName, dimension, value);
       }}
     />
   );

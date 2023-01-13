@@ -48,3 +48,56 @@ export interface ITextQuestion extends IQuestion {
 }
 
 export type ISurveyQuestion = IMultiChoiceQuestion | ITextQuestion;
+
+export interface IWebPageValue {
+  dateLastCrawled: string;
+  displayUrl: string;
+  id: string;
+  isFamilyFriendly: boolean;
+  isNavigational: boolean;
+  language: string;
+  name: string;
+  snippet: string;
+  url: string;
+  deepLinks?: {
+    name?: string;
+    url?: string;
+  }[];
+}
+export interface IBingSearchResonse {
+  news: any;
+  queryContext: any;
+  rankingResponse: any;
+  relatedSearches: any;
+  webPages: {
+    totalEstimatedMatches: number;
+    webSearchUrl: string;
+    value: IWebPageValue[];
+  };
+}
+// export interface IBingSearchResonse {
+//   config: any;
+//   headers: any;
+//   request: any;
+//   status: number;
+//   statusText: string;
+//   data: {
+//     news: any;
+//     queryContext: any;
+//     rankingResponse: any;
+//     relatedSearches: any;
+//     webPages: {
+//       totalEstimatedMatches: number;
+//       webSearchUrl: string;
+//       value: IWebPageValue[];
+//     };
+//   };
+// }
+
+export interface IProduct {
+  make: string;
+  model: string;
+  trim: string;
+  cargo_space: number;
+  length: number;
+}

@@ -3,17 +3,13 @@ import { Box, Stack, Typography } from "@mui/material";
 import ContentGenerator from "./ContentGenerator";
 import AttentionGenerator from "./AttentionGenerator";
 import { attentionText } from "./data";
+import { useSessionState } from "../../redux/sessionState";
 
-const products = ["product1", "product2", "product3", "product4", "product5"];
-const dimensions = [
-  "dimension1",
-  "dimension2",
-  "dimension3",
-  "dimension4",
-  "dimension5",
-];
+// const products = ["product1", "product2", "product3", "product4", "product5"];
+// const dimensions = ["cargo space", "length"];
 
 export default function InfoPanel() {
+  const { selectedDimensions, selectedProducts } = useSessionState();
   return (
     <Stack sx={{ p: 4 }} direction="column">
       <Typography variant="h5" sx={{ mb: 2, fontWeight: "bolder" }}>
@@ -21,13 +17,17 @@ export default function InfoPanel() {
       </Typography>
       <ContentGenerator
         pretext="You are interested in"
-        items={dimensions}
+        items={selectedDimensions.map((dimension) =>
+          dimension.replace("_", " ")
+        )}
         conjunction="and"
         end="."
       />
       <ContentGenerator
         pretext="Which product should you choose:"
-        items={products}
+        items={selectedProducts.map(
+          (product) => `${product.make} ${product.model}- (${product.trim})`
+        )}
         conjunction="or"
         end="?"
       />

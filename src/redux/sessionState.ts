@@ -1,16 +1,26 @@
 import create from "zustand";
 import { devtools } from "zustand/middleware";
-import { ISearchUnit } from "../types";
-// import { Randomizer } from "../utils/randomizer";
+import { IProduct, ISearchUnit } from "../types";
+import { Randomizer } from "../utils/randomizer";
 
 export interface IUseSessionState {
   searchUnit: ISearchUnit;
   selectedDimensions: string[];
   selectedProducts: {
-    name: string;
+    model: string;
     [key: string]: number | string;
   }[];
-  updateSelectedProducts: (
+  // selectedProducts: {
+  //   // name: string;
+  //   [key: string]: number | string;
+  // }[];
+  userInputs: {
+    model: string;
+    cargo_space: number;
+    length: number;
+    [key: string]: number | string;
+  }[];
+  updateUserInputs: (
     productName: string,
     dimension: string,
     newValue: string
@@ -21,56 +31,52 @@ export interface IUseSessionState {
 
 export const useSessionState = create<IUseSessionState>()(
   devtools(
-    (set) => ({
-      // searchUnit: Randomizer.randomSearchUnitAssignment(),
-      searchUnit: "Bing",
-      selectedDimensions: ["dimension_1", "dimension_2", "dimension_3"],
-      selectedProducts: [
-        {
-          name: "Product 1",
-          dimension_1: "one",
-          dimension_2: 2,
-          dimension_3: 3,
+    (set) => {
+      const productSamples = Randomizer.sampkingProducts(2);
+      const cleanedProductSamples = cleanProductInfo(productSamples);
+      return {
+        searchUnit: Randomizer.randomSearchUnitAssignment(),
+        // searchUnit: "Bing",
+        selectedDimensions: ["cargo_space", "length"],
+        selectedProducts: productSamples,
+        userInputs: cleanedProductSamples,
+        updateUserInputs: (productName, dimension, newValue) => {
+          set(
+            (state) => ({
+              ...state,
+              userInputs: state.userInputs.map((product) => ({
+                ...product,
+                [dimension]:
+                  product.model === productName ? newValue : product[dimension],
+              })),
+            }),
+            false,
+            "updateUserInputs"
+          );
         },
-        {
-          name: "Product 2",
-          dimension_1: "two",
-          dimension_2: 4,
-          dimension_3: 5,
+        finalDecision: "",
+        updateFinalDecision: (value) => {
+          set(
+            (state) => ({
+              ...state,
+              finalDecision: value,
+            }),
+            false,
+            "updateFinalDecision"
+          );
         },
-        {
-          name: "Product 3",
-          dimension_1: "three",
-          dimension_2: 6,
-          dimension_3: 7,
-        },
-      ],
-      updateSelectedProducts: (productName, dimension, newValue) => {
-        set(
-          (state) => ({
-            ...state,
-            selectedProducts: state.selectedProducts.map((product) => ({
-              ...product,
-              [dimension]:
-                product.name === productName ? newValue : product[dimension],
-            })),
-          }),
-          false,
-          "updateSelectedProducts"
-        );
-      },
-      finalDecision: "",
-      updateFinalDecision: (value) => {
-        set(
-          (state) => ({
-            ...state,
-            finalDecision: value,
-          }),
-          false,
-          "updateFinalDecision"
-        );
-      },
-    }),
+      };
+    },
     { name: "SessionState" }
   )
 );
+
+function cleanProductInfo(products: IProduct[]) {
+  return products.map((product) => ({
+    model: product.model,
+    make: product.make,
+    trim: product.trim,
+    cargo_space: 0,
+    length: 0,
+  }));
+}
