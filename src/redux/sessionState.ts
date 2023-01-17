@@ -36,6 +36,7 @@ export interface IUseSessionState {
   updateCurrentQueryIndex: (value: number) => void;
   bingQueries: IBingQuery[];
   addBingQuery: (newQuery: IBingQuery) => void;
+  updateBingQuery: (queryId: string, update: Partial<IBingQuery>) => void;
   addClickedLink: (queryId: string, newLink: IClickedLink) => void;
   updateBingQueryLink: (
     queryId: string,
@@ -149,6 +150,24 @@ export const useSessionState = create<IUseSessionState>()(
             }),
             false,
             "addBingQuery"
+          );
+        },
+        updateBingQuery: (queryId, update) => {
+          set(
+            (state) => ({
+              ...state,
+              bingQueries: state.bingQueries.map((query) => {
+                if (query.queryId === queryId) {
+                  return {
+                    ...query,
+                    ...update,
+                  };
+                }
+                return query;
+              }),
+            }),
+            false,
+            "updateBingQuery"
           );
         },
         addClickedLink: (queryId, newLink) => {

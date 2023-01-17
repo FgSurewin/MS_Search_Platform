@@ -28,6 +28,7 @@ export default function BingSearch() {
     currentQueryIndex,
     updateCurrentQueryIndex,
     addBingQuery,
+    updateBingQuery,
     bingQueries,
     updateBingQueryLink,
   } = useSessionState();
@@ -73,6 +74,10 @@ export default function BingSearch() {
         (link) => link.linkId === currentLinkId
       );
       if (linkInfo) {
+        const checkStartTime =
+          linkInfo.clickedTime[linkInfo.clickedTime.length - 1] ===
+          linkStartTime;
+        console.log("checkStartTime -> " + checkStartTime);
         const newDurationArr = linkInfo.duration;
         newDurationArr[newDurationArr.length - 1] = duration;
         updateBingQueryLink(currentQuerytId, currentLinkId, {
@@ -140,15 +145,47 @@ export default function BingSearch() {
     }
   }
 
+  function handleAddLinkEmptySlot(
+    currentQueryIdx: number,
+    currentTime: string
+  ) {
+    const targetQuery = bingQueries[currentQueryIdx];
+    const newQueryTimeArr = targetQuery.queryTime;
+    newQueryTimeArr.push(currentTime);
+    const newClickedLinks = targetQuery.clickedLinks;
+    newClickedLinks.forEach((link) => {
+      link.clickedTime.push("");
+      link.duration.push(0);
+    });
+    updateBingQuery(targetQuery.queryId, {
+      queryTime: newQueryTimeArr,
+      clickedLinks: newClickedLinks,
+    });
+  }
+
   function handleForward() {
     if (currentQueryIndex !== null && currentQueryIndex < bingQueries.length) {
-      updateCurrentQueryIndex(currentQueryIndex + 1);
+      // TODO: End previous link
+      const currentTime = moment().format("YYYY-MM-DD HH:mm:ss");
+      handleEndPrevLink(currentTime);
+      //TODO: Update query index
+      const newCurrentQueryIndex = currentQueryIndex + 1;
+      updateCurrentQueryIndex(newCurrentQueryIndex);
+      //TODO: Add empty slot for clicked links
+      handleAddLinkEmptySlot(newCurrentQueryIndex, currentTime);
     }
   }
 
   function handleBack() {
     if (currentQueryIndex !== null && currentQueryIndex > 0) {
-      updateCurrentQueryIndex(currentQueryIndex - 1);
+      // TODO: End previous link
+      const currentTime = moment().format("YYYY-MM-DD HH:mm:ss");
+      handleEndPrevLink(currentTime);
+      //TODO: Update query index
+      const newCurrentQueryIndex = currentQueryIndex - 1;
+      updateCurrentQueryIndex(newCurrentQueryIndex);
+      //TODO: Add empty slot for clicked links
+      handleAddLinkEmptySlot(newCurrentQueryIndex, currentTime);
     }
   }
 
@@ -225,7 +262,7 @@ export default function BingSearch() {
                 <Typography variant="h5" sx={{ m: 2, textAlign: "center" }}>
                   Browsing History
                 </Typography>
-                <Divider />
+                <Divider color="error" sx={{ borderWidth: "6px" }} />
                 {bingQueries[currentQueryIndex].clickedLinks.map((link) => (
                   <LinkSlot
                     key={link.linkId}
@@ -235,7 +272,7 @@ export default function BingSearch() {
                     handleEndPrevLink={handleEndPrevLink}
                   />
                 ))}
-                <Divider />
+                <Divider color="error" sx={{ borderWidth: "6px" }} />
               </Stack>
             )}
           {currentQueryIndex !== null &&
