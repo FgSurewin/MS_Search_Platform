@@ -1,5 +1,12 @@
 import React from "react";
-import { Container, Paper, Box, Stack, Button, TextField } from "@mui/material";
+import {
+  Container,
+  Box,
+  Stack,
+  Button,
+  TextField,
+  useTheme,
+} from "@mui/material";
 import { Configuration, OpenAIApi } from "openai";
 import Dialog from "./Dialog";
 import { IChoice, IUsage } from "../../types";
@@ -16,6 +23,7 @@ export default function ChatGPTPage() {
   const [dialogs, setDialogs] = React.useState<
     { question: string; answer: IChoice; usage: IUsage }[]
   >([]);
+  const theme = useTheme();
 
   const query_answer = async (prompt: string) => {
     const configuration = new Configuration({
@@ -61,13 +69,13 @@ export default function ChatGPTPage() {
   };
 
   return (
-    <Paper
+    <Box
       sx={{
         // bgcolor: "#343541",
-        width: "100%",
+        // width: "100%",
         height: "100%",
-        position: "relative",
-        overflowY: "auto",
+        // overflowY: "auto",
+        // position: "relative",
       }}
     >
       <Container maxWidth="md">
@@ -80,6 +88,8 @@ export default function ChatGPTPage() {
             position: "sticky",
             top: 0,
             zIndex: 1,
+            mb: 2,
+            bgcolor: theme.palette.mode === "dark" ? "#1e1e1e" : "#fff",
           }}
         >
           {/* <Box
@@ -137,6 +147,6 @@ export default function ChatGPTPage() {
             ))}
         </Stack>
       </Container>
-    </Paper>
+    </Box>
   );
 }

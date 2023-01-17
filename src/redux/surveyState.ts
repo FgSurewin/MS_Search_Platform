@@ -7,26 +7,43 @@ export interface IUseSurveyState {
   updateSurveyQuestions: (questionNumber: number, answer: string) => void;
 }
 
-// const sampleQuestions: ISurveyQuestion[] = [
-//   {
-//     questionNumber: 1,
-//     questionText: "What is your name?",
-//     questionType: "Text",
-//     answer: "",
-//   },
-//   {
-//     questionNumber: 2,
-//     questionText: "What is your gender?",
-//     questionType: "MultiChoice",
-//     choices: ["male", "female"],
-//     answer: "",
-//   },
-// ];
+const sampleQuestions: ISurveyQuestion[] = [
+  {
+    questionNumber: 1,
+    questionText: "What is your name?",
+    questionType: "Text",
+    answer: "",
+    isRequired: true,
+  },
+  {
+    questionNumber: 2,
+    questionText: "What is your gender?",
+    questionType: "MultiChoice",
+    choices: ["male", "female"],
+    answer: "",
+    isRequired: true,
+  },
+  {
+    questionNumber: 3,
+    questionText: "What is your age?",
+    questionType: "MultiChoice",
+    choices: [30, 40, 50, 60, 70, 80, 90, 100],
+    answer: "",
+    isRequired: false,
+  },
+  {
+    questionNumber: 4,
+    questionText: "What is your position",
+    questionType: "Text",
+    answer: "",
+    isRequired: false,
+  },
+];
 
 export const useSurveyState = create<IUseSurveyState>()(
   devtools(
     (set) => ({
-      surveyQuestions: [],
+      surveyQuestions: sampleQuestions,
       updateSurveyQuestions: (questionNumber, answer) => {
         set(
           (state) => ({

@@ -1,18 +1,22 @@
 import React from "react";
-import {
-  Container,
-  Stack,
-  Typography,
-  Button,
-  FormControlLabel,
-  Checkbox,
-} from "@mui/material";
+import { Container, Stack, Typography, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import MultipleChoice from "./MultipleChoice";
 import OpenEnd from "./OpenEnd";
+import { useSurveyState } from "../../redux/surveyState";
 
 export default function SurveyPage() {
-  const [checked, setChecked] = React.useState(false);
+  const { surveyQuestions, updateSurveyQuestions } = useSurveyState();
+  const handleContinue = () => {
+    return surveyQuestions.every((question) => {
+      if (question.isRequired) {
+        return question.answer !== "";
+      } else {
+        return true;
+      }
+    });
+  };
+  const checkContinue = React.useMemo(handleContinue, [surveyQuestions]);
   const navigate = useNavigate();
   return (
     <Container maxWidth="md">
@@ -25,21 +29,36 @@ export default function SurveyPage() {
         <Typography variant="h3" sx={{ p: 4 }}>
           Survey
         </Typography>
-        <MultipleChoice
-          questionNumber={1}
-          question={"Fake survey question one"}
-          options={["Option 1", "Option 2", "Option 3", "Option 4"]}
-        />
-        <OpenEnd questionNumber={2} question={"Fake suyvey question two"} />
-        <FormControlLabel
-          control={<Checkbox checked={checked} />}
-          label="Click here to confirm all your answer are accurate."
-          sx={{ pb: 2 }}
-          onClick={() => setChecked(!checked)}
-        />
+        {surveyQuestions.length > 0 &&
+          surveyQuestions.map((question) => {
+            if (question.questionType === "MultiChoice") {
+              return (
+                <MultipleChoice
+                  key={question.questionNumber}
+                  questionNumber={question.questionNumber}
+                  question={question.questionText}
+                  options={question.choices}
+                  answer={question.answer}
+                  updateSurveyQuestions={updateSurveyQuestions}
+                  isRequired={question.isRequired}
+                />
+              );
+            } else {
+              return (
+                <OpenEnd
+                  key={question.questionNumber}
+                  questionNumber={question.questionNumber}
+                  question={question.questionText}
+                  answer={question.answer}
+                  updateSurveyQuestions={updateSurveyQuestions}
+                  isRequired={question.isRequired}
+                />
+              );
+            }
+          })}
         <Button
           variant="contained"
-          disabled={!checked}
+          disabled={!checkContinue}
           onClick={() => navigate("/feedback")}
         >
           Cotinue

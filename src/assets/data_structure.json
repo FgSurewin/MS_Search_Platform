@@ -1,0 +1,82 @@
+{
+  "worker_id": "worker",
+  "scenario_id": "scen_one",
+  "search_component": "Bing",
+  "start_time": "2019-01-01 00:00:00",
+  "end_time": "2019-01-01 00:00:00",
+  "final_decision": "Toyota RAV4",
+  "selected_dimensions": ["cargo space", "map"],
+  "ground_truth": [
+    {
+      "make": "Toyota",
+      "model": "RAV4",
+      "trim": "LE FWD (Natl)",
+      "cargo_space": 69.8,
+      "length": 180.9
+    },
+    {
+      "make": "Jeep",
+      "model": "Grand Cherokee",
+      "trim": "Laredo 4x2",
+      "cargo_space": 68.3,
+      "length": 189.8
+    }
+  ],
+  "product_matrix": [
+    {
+      "make": "Toyota",
+      "model": "RAV4",
+      "trim": "LE FWD (Natl)",
+      "cargo_space": {
+        "last_query_id": "query_id_1",
+        "value": 69.8,
+        "input_time": "2019-01-01 00:00:00"
+      },
+      "length": {
+        "last_query_id": "query_id_2",
+        "value": 180.9,
+        "input_time": "2019-01-01 00:00:00"
+      }
+    },
+    {
+      "make": "Jeep",
+      "model": "Grand Cherokee",
+      "trim": "Laredo 4x2",
+      "cargo_space": {
+        "last_query_id": "query_id_3",
+        "value": 68.3,
+        "input_time": "2019-01-01 00:00:00"
+      },
+      "length": {
+        "last_query_id": "query_id_4",
+        "value": 189.8,
+        "input_time": "2019-01-01 00:00:00"
+      }
+    }
+  ],
+  "bing_queries": [
+    {
+      "query_id": "query_id_1",
+      "query": "Toyota RAV4 cargo space",
+      "query_time": ["2019-01-01 00:00:00"],
+      "clicked_links": [
+        {
+          "link": "https://www.cargurus.com/Cars/2018-Toyota-RAV4-Overview-c28067",
+          "click_time": ["2019-01-01 00:00:00"],
+          "title": "2018 Toyota RAV4 Overview | Cars.com",
+          "snippet": "Research the 2018 Toyota RAV4 online at cars.com. You'll find local deals, specs, images, videos, consumer and expert reviews, features, trims, and articles for every turn in your RAV4.",
+          "duration": [15.0] /* milliseconds */
+        }
+      ]
+    }
+  ],
+  "cahtgpt_queries": [
+    {
+      "query_id": "query_id_2",
+      "query": "Toyota RAV4 length",
+      "query_time": ["2019-01-01 00:00:00"],
+      "answer": "180.9",
+      "duration": [15.0]
+    }
+  ]
+}

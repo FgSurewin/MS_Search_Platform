@@ -1,32 +1,52 @@
 import create from "zustand";
+import moment from "moment";
 import { devtools } from "zustand/middleware";
-import { IProduct, ISearchUnit } from "../types";
+import {
+  IProduct,
+  ISearchUnit,
+  IProductMatrix,
+  IProductDimension,
+  IChatGPTQuery,
+  IBingQuery,
+  IClickedLink,
+  IProductMatrixInput,
+} from "../types";
 import { Randomizer } from "../utils/randomizer";
 
 export interface IUseSessionState {
+  workerId: string;
+  updateWorkerId: (value: string) => void;
+  scenarioId: string;
   searchUnit: ISearchUnit;
-  selectedDimensions: string[];
-  selectedProducts: {
-    model: string;
-    [key: string]: number | string;
-  }[];
-  // selectedProducts: {
-  //   // name: string;
-  //   [key: string]: number | string;
-  // }[];
-  userInputs: {
-    model: string;
-    cargo_space: number;
-    length: number;
-    [key: string]: number | string;
-  }[];
-  updateUserInputs: (
-    productName: string,
-    dimension: string,
-    newValue: string
+  startTimestamp: string;
+  updateStartTimestamp: (value: string) => void;
+  endTimestamp: string;
+  updateEndTimestamp: (value: string) => void;
+  selectedDimensions: IProductDimension[];
+  groundTruth: IProduct[];
+  productMatrix: IProductMatrix[];
+  updateProductMatrix: (
+    model: string,
+    dimension: IProductDimension,
+    update: Partial<IProductMatrixInput>
   ) => void;
   finalDecision: string;
   updateFinalDecision: (value: string) => void;
+  currentQueryIndex: number | null;
+  updateCurrentQueryIndex: (value: number) => void;
+  bingQueries: IBingQuery[];
+  addBingQuery: (newQuery: IBingQuery) => void;
+  addClickedLink: (queryId: string, newLink: IClickedLink) => void;
+  updateBingQueryLink: (
+    queryId: string,
+    linkId: string,
+    update: Partial<IClickedLink>
+  ) => void;
+  chatgptQueries: IChatGPTQuery[];
+  updateChatgptQueries: (
+    queryId: string,
+    upate: Partial<IChatGPTQuery>
+  ) => void;
 }
 
 export const useSessionState = create<IUseSessionState>()(
@@ -35,23 +55,67 @@ export const useSessionState = create<IUseSessionState>()(
       const productSamples = Randomizer.sampkingProducts(2);
       const cleanedProductSamples = cleanProductInfo(productSamples);
       return {
-        searchUnit: Randomizer.randomSearchUnitAssignment(),
-        // searchUnit: "Bing",
-        selectedDimensions: ["cargo_space", "length"],
-        selectedProducts: productSamples,
-        userInputs: cleanedProductSamples,
-        updateUserInputs: (productName, dimension, newValue) => {
+        workerId: "worker",
+        updateWorkerId: (value) => {
           set(
             (state) => ({
               ...state,
-              userInputs: state.userInputs.map((product) => ({
-                ...product,
-                [dimension]:
-                  product.model === productName ? newValue : product[dimension],
-              })),
+              workerId: value,
             }),
             false,
-            "updateUserInputs"
+            "updateWorkerId"
+          );
+        },
+        scenarioId: "scenario",
+        startTimestamp: moment().format("YYYY-MM-DD HH:mm:ss"),
+        updateStartTimestamp: (value) => {
+          set(
+            (state) => ({
+              ...state,
+              startTimestamp: value,
+            }),
+            false,
+            "updateStartTimestamp"
+          );
+        },
+        endTimestamp: "",
+        updateEndTimestamp: (value) => {
+          set(
+            (state) => ({
+              ...state,
+              endTimestamp: value,
+            }),
+            false,
+            "updateEndTimestamp"
+          );
+        },
+        // searchUnit: Randomizer.randomSearchUnitAssignment(),
+        searchUnit: "Bing",
+        selectedDimensions: ["cargo_space", "length"],
+        groundTruth: productSamples,
+        productMatrix: cleanedProductSamples,
+        updateProductMatrix: (model, dimension, update) => {
+          set(
+            (state) => {
+              const newProductMatrix = state.productMatrix.map((product) => {
+                if (product.model === model) {
+                  return {
+                    ...product,
+                    [dimension]: {
+                      ...product[dimension],
+                      ...update,
+                    },
+                  };
+                }
+                return product;
+              });
+              return {
+                ...state,
+                productMatrix: newProductMatrix,
+              };
+            },
+            false,
+            "updateProductMatrix"
           );
         },
         finalDecision: "",
@@ -65,18 +129,111 @@ export const useSessionState = create<IUseSessionState>()(
             "updateFinalDecision"
           );
         },
+        currentQueryIndex: null,
+        updateCurrentQueryIndex: (value) => {
+          set(
+            (state) => ({
+              ...state,
+              currentQueryIndex: value,
+            }),
+            false,
+            "updateCurrentQueryIndex"
+          );
+        },
+        bingQueries: [],
+        addBingQuery: (newQuery) => {
+          set(
+            (state) => ({
+              ...state,
+              bingQueries: [...state.bingQueries, newQuery],
+            }),
+            false,
+            "addBingQuery"
+          );
+        },
+        addClickedLink: (queryId, newLink) => {
+          set(
+            (state) => ({
+              ...state,
+              bingQueries: state.bingQueries.map((query) => {
+                if (query.queryId === queryId) {
+                  return {
+                    ...query,
+                    clickedLinks: [...query.clickedLinks, newLink],
+                  };
+                }
+                return query;
+              }),
+            }),
+            false,
+            "addClickedLink"
+          );
+        },
+        updateBingQueryLink: (queryId, linkId, update) => {
+          set(
+            (state) => ({
+              ...state,
+              bingQueries: state.bingQueries.map((query) => {
+                if (query.queryId === queryId) {
+                  return {
+                    ...query,
+                    clickedLinks: query.clickedLinks.map((link) => {
+                      if (link.linkId === linkId) {
+                        return {
+                          ...link,
+                          ...update,
+                        };
+                      }
+                      return link;
+                    }),
+                  };
+                }
+                return query;
+              }),
+            }),
+            false,
+            "updateBingQueryLink"
+          );
+        },
+        chatgptQueries: [],
+        updateChatgptQueries: (queryId, update) => {
+          set(
+            (state) => ({
+              ...state,
+              chatgptQueries: state.chatgptQueries.map((query) => {
+                if (query.queryId === queryId) {
+                  return {
+                    ...query,
+                    ...update,
+                  };
+                }
+                return query;
+              }),
+            }),
+            false,
+            "updateChatgptQueries"
+          );
+        },
       };
     },
     { name: "SessionState" }
   )
 );
 
-function cleanProductInfo(products: IProduct[]) {
+function cleanProductInfo(products: IProduct[]): IProductMatrix[] {
   return products.map((product) => ({
     model: product.model,
     make: product.make,
     trim: product.trim,
-    cargo_space: 0,
-    length: 0,
+    cargo_space: {
+      value: 0,
+      lastQueryId: null,
+      inputTime: "",
+    },
+    length: {
+      value: 0,
+      lastQueryId: null,
+      inputTime: "",
+    },
   }));
 }

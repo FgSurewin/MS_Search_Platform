@@ -13,12 +13,14 @@ import { useSessionState } from "../../redux/sessionState";
 import { useThemeState } from "../../redux/themeState";
 import BasicDialog from "../Dialog/BasicDialog";
 import { useNavigate } from "react-router-dom";
+import { IProductDimension, IProductMatrixInput } from "../../types";
+import moment from "moment";
 
 export default function EditableTable() {
   const {
     selectedDimensions,
-    userInputs,
-    updateUserInputs,
+    productMatrix,
+    updateProductMatrix,
     finalDecision,
     updateFinalDecision,
   } = useSessionState();
@@ -51,7 +53,7 @@ export default function EditableTable() {
             <TableCell>Product</TableCell>
             {selectedDimensions.map((dimension, index) => (
               <TableCell key={index} align="center">
-                {dimension}
+                {dimension.split("_").join(" ")}
               </TableCell>
             ))}
             <TableCell>Ratio</TableCell>
@@ -59,7 +61,7 @@ export default function EditableTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {userInputs.map((product, index) => (
+          {productMatrix.map((product, index) => (
             <TableRow
               key={`${product.model} + ${index}`}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -70,22 +72,24 @@ export default function EditableTable() {
               {selectedDimensions.map((dimension, index) => (
                 <TableCell
                   key={`${product.model} + ${dimension} + ${index}`}
-                  align="right"
+                  align="center"
                 >
                   <EditableTableCell
-                    initValue={product[dimension]}
+                    initValue={product[dimension].value}
                     productName={product.model}
                     dimension={dimension}
-                    updateUserInputs={updateUserInputs}
+                    updateProductMatrix={updateProductMatrix}
                   />
                 </TableCell>
               ))}
-              <TableCell component="th" scope="row">
-                {product.cargo_space > 0 && product.length > 0
-                  ? product.cargo_space / product.length
-                  : 0}
+              <TableCell component="th" scope="row" align="center">
+                {product.cargo_space.value > 0 && product.length.value > 0
+                  ? (product.cargo_space.value / product.length.value).toFixed(
+                      3
+                    )
+                  : ""}
               </TableCell>
-              <TableCell component="th" scope="row">
+              <TableCell component="th" scope="row" align="center">
                 <Button
                   variant="contained"
                   onClick={() => handleClickOpen(product.model)}
@@ -112,11 +116,11 @@ export default function EditableTable() {
 export interface IEditableTableCellProps {
   initValue: string | number;
   productName: string;
-  dimension: string;
-  updateUserInputs: (
-    productName: string,
-    dimension: string,
-    newValue: string
+  dimension: IProductDimension;
+  updateProductMatrix: (
+    model: string,
+    dimension: IProductDimension,
+    update: Partial<IProductMatrixInput>
   ) => void;
 }
 
@@ -124,30 +128,44 @@ function EditableTableCell({
   initValue,
   productName,
   dimension,
-  updateUserInputs,
+  updateProductMatrix,
 }: IEditableTableCellProps) {
   const { mode } = useThemeState();
   const [value, setValue] = React.useState(initValue.toString());
+  const { currentQueryIndex, bingQueries, chatgptQueries, searchUnit } =
+    useSessionState();
 
   return (
     <Box
       component="input"
       type="text"
-      value={value}
+      value={Number(value) === 0 ? "" : value}
       sx={{
         fontSize: "1rem",
         padding: 0,
         margin: 0,
-        border: 0,
         width: "50%",
         bgcolor: "transparent",
+        border: "1px grey solid ",
         color: mode === "light" ? "black" : "white",
       }}
       onChange={(e) => {
         setValue(e.target.value);
       }}
       onBlur={() => {
-        updateUserInputs(productName, dimension, value);
+        let queryId: string | null;
+        if (currentQueryIndex === null) {
+          queryId = null;
+        } else {
+          const queries = searchUnit === "Bing" ? bingQueries : chatgptQueries;
+          queryId = queries[currentQueryIndex].queryId;
+        }
+
+        updateProductMatrix(productName, dimension, {
+          value: Number(value),
+          lastQueryId: queryId,
+          inputTime: moment().format("YYYY-MM-DD HH:mm:ss"),
+        });
       }}
     />
   );

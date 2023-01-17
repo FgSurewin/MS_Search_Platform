@@ -10,20 +10,8 @@ import ChatGPT from "../../components/ChatGPT";
 export default function MainPage() {
   const { searchUnit } = useSessionState();
   return (
-    <Paper
-      sx={{
-        width: "100vw",
-        height: "100vh",
-      }}
-    >
-      <Grid
-        container
-        sx={{
-          width: "100%",
-          height: "100%",
-          overflow: "hidden",
-        }}
-      >
+    <Paper component="section">
+      <Grid container>
         <Grid xs={12} sm={6} direction="column">
           <Grid xs={12}>
             <InfoPanel />
@@ -44,7 +32,14 @@ export default function MainPage() {
           flexItem
           sx={{ display: { xs: "none", sm: "block" } }}
         />
-        <Grid xs={12} sm sx={{ overflowY: "auto" }}>
+        <Grid
+          xs={12}
+          sm
+          sx={{
+            height: "100vh",
+            overflowY: "auto",
+          }}
+        >
           {searchUnit === "Bing" ? <BingSearch /> : <ChatGPT />}
         </Grid>
       </Grid>

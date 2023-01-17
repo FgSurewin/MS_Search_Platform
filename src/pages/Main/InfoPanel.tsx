@@ -9,7 +9,7 @@ import { useSessionState } from "../../redux/sessionState";
 // const dimensions = ["cargo space", "length"];
 
 export default function InfoPanel() {
-  const { selectedDimensions, selectedProducts } = useSessionState();
+  const { selectedDimensions, groundTruth } = useSessionState();
   return (
     <Stack sx={{ p: 4 }} direction="column">
       <Typography variant="h5" sx={{ mb: 2, fontWeight: "bolder" }}>
@@ -25,7 +25,7 @@ export default function InfoPanel() {
       />
       <ContentGenerator
         pretext="Which product should you choose:"
-        items={selectedProducts.map(
+        items={groundTruth.map(
           (product) => `${product.make} ${product.model}- (${product.trim})`
         )}
         conjunction="or"

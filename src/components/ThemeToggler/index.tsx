@@ -18,6 +18,7 @@ export default function ThemeToggler() {
         position: "fixed",
         bottom: 20,
         left: 20,
+        zIndex: 1000,
       }}
     >
       <IconButton

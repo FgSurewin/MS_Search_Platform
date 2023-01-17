@@ -3,6 +3,9 @@ import {
   CreateCompletionResponseChoicesInner,
 } from "openai";
 
+
+
+/* --------------------------- ChatGPT Interfaces --------------------------- */
 export interface IUsage {
   prompt_tokens: number;
   completion_tokens: number;
@@ -36,19 +39,22 @@ export interface IQuestion {
   questionNumber: number;
   questionText: string;
   answer: string;
+  isRequired: boolean;
 }
 
+/* -------------------------- Surver Question Types ------------------------- */
 export interface IMultiChoiceQuestion extends IQuestion {
   questionType: "MultiChoice";
-  choices: string[];
+  choices: (string | number)[];
 }
 
 export interface ITextQuestion extends IQuestion {
-  questionTYpe: "Text";
+  questionType: "Text";
 }
 
 export type ISurveyQuestion = IMultiChoiceQuestion | ITextQuestion;
 
+/* ------------------------ Bing Search API Response ------------------------ */
 export interface IWebPageValue {
   dateLastCrawled: string;
   displayUrl: string;
@@ -94,10 +100,53 @@ export interface IBingSearchResonse {
 //   };
 // }
 
+/* -------------------------- Product Information --------------------------- */
 export interface IProduct {
   make: string;
   model: string;
   trim: string;
   cargo_space: number;
   length: number;
+}
+
+// export type IProductDimension = keyof IProduct;
+export type IProductDimension = "cargo_space" | "length";
+
+/* --------------------------- Session State Types -------------------------- */
+export interface IProductMatrixInput {
+    value: number;
+    lastQueryId: string | null;
+    inputTime: string;
+}
+
+export interface IProductMatrix {
+  make: string;
+  model: string;
+  trim: string;
+  cargo_space: IProductMatrixInput;
+  length: IProductMatrixInput;
+}
+
+export interface IClickedLink {
+  linkId: string;
+  url: string;
+  clickedTime: string[];
+  title: string;
+  snippet: string;
+  duration:number[]
+}
+export interface IBingQuery {
+  queryId: string;
+  query: string;
+  queryTime: string[];
+  clickedLinks: IClickedLink[];
+  cachedLinks: IWebPageValue[] | undefined;
+}
+
+export interface IChatGPTQuery {
+  queryId: string;
+  query: string;
+  queryTime: string[];
+  answer: string;
+  duration:number[]
 }
