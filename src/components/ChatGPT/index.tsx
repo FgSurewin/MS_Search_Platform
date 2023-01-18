@@ -6,6 +6,7 @@ import {
   Button,
   TextField,
   useTheme,
+  CircularProgress,
 } from "@mui/material";
 import moment from "moment";
 import Dialog from "./Dialog";
@@ -23,9 +24,8 @@ import { useTimeState } from "../../redux/timeState";
 
 export default function ChatGPTPage() {
   const [inputPrompt, setInputPrompt] = React.useState<string>("");
-  // const [dialogs, setDialogs] = React.useState<
-  //   { question: string; answer: IChoice; usage: IUsage }[]
-  // >([]);
+  const [loading, setLoading] = React.useState<boolean>(false);
+
   const theme = useTheme();
   const {
     chatQueryCounting,
@@ -156,7 +156,9 @@ export default function ChatGPTPage() {
         duration: [0],
         queryTime: [currentTime],
       });
-      updateCurrentQueryIndex(chatgptQueries.length - 1);
+      const newQueryIndex = chatgptQueries.length;
+      // console.log("newQueryIndex -> ", newQueryIndex);
+      updateCurrentQueryIndex(newQueryIndex);
     }
     updateChatQueryCounting(true);
     updateChatQueryStartTime(currentTime);
@@ -269,11 +271,13 @@ export default function ChatGPTPage() {
           <Button
             variant="contained"
             onClick={async () => {
+              setLoading(true);
               const inputTemp = inputPrompt;
               setInputPrompt("");
               const result = await query_answer(inputTemp);
               if (result?.answer && result?.usage) {
                 handleQueryHistory(inputTemp, result.answer, result.usage);
+                setLoading(false);
               }
               //  Remove the prompt after submit
             }}
@@ -300,23 +304,30 @@ export default function ChatGPTPage() {
                 />
               </Box>
             ))} */}
-          {currentQueryIndex !== null && chatgptQueries[currentQueryIndex] && (
-            <Dialog
-              question={chatgptQueries[currentQueryIndex].query}
-              answer={chatgptQueries[currentQueryIndex].answer.text}
-              answerProbs={concatTokensAndTokenProbs(
-                chatgptQueries[currentQueryIndex].answer.logprobs.tokens,
-                convertLogprobsToProbs(
-                  chatgptQueries[currentQueryIndex].answer.logprobs
-                    .token_logprobs
-                ),
-                chatgptQueries[currentQueryIndex].usage.completion_tokens
-              )}
-              top_logprobs={
-                chatgptQueries[currentQueryIndex].answer.logprobs.top_logprobs
-              }
-            />
+          {loading && (
+            <Box sx={{ textAlign: "center" }}>
+              <CircularProgress />
+            </Box>
           )}
+          {!loading &&
+            currentQueryIndex !== null &&
+            chatgptQueries[currentQueryIndex] && (
+              <Dialog
+                question={chatgptQueries[currentQueryIndex].query}
+                answer={chatgptQueries[currentQueryIndex].answer.text}
+                answerProbs={concatTokensAndTokenProbs(
+                  chatgptQueries[currentQueryIndex].answer.logprobs.tokens,
+                  convertLogprobsToProbs(
+                    chatgptQueries[currentQueryIndex].answer.logprobs
+                      .token_logprobs
+                  ),
+                  chatgptQueries[currentQueryIndex].usage.completion_tokens
+                )}
+                top_logprobs={
+                  chatgptQueries[currentQueryIndex].answer.logprobs.top_logprobs
+                }
+              />
+            )}
         </Stack>
       </Container>
     </Box>

@@ -118,7 +118,10 @@ export default function BingSearch() {
         clickedLinks: [],
         cachedLinks,
       });
-      updateCurrentQueryIndex(bingQueries.length - 1);
+      const newQueryIndex = bingQueries.length;
+      // console.log("bingQueries -> ", bingQueries);
+      // console.log("newQueryIndex -> ", newQueryIndex);
+      updateCurrentQueryIndex(newQueryIndex);
     }
   }
 
