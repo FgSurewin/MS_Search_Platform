@@ -74,10 +74,10 @@ export default function BingSearch() {
         (link) => link.linkId === currentLinkId
       );
       if (linkInfo) {
-        const checkStartTime =
-          linkInfo.clickedTime[linkInfo.clickedTime.length - 1] ===
-          linkStartTime;
-        console.log("checkStartTime -> " + checkStartTime);
+        // const checkStartTime =
+        //   linkInfo.clickedTime[linkInfo.clickedTime.length - 1] ===
+        //   linkStartTime;
+        // console.log("checkStartTime -> " + checkStartTime);
         const newDurationArr = linkInfo.duration;
         newDurationArr[newDurationArr.length - 1] = duration;
         updateBingQueryLink(currentQuerytId, currentLinkId, {
@@ -90,17 +90,17 @@ export default function BingSearch() {
     }
   }
 
-  async function handleQueryHistory(
+  function handleQueryHistory(
     inputPrompt: string,
     cachedLinks: IWebPageValue[] | undefined
   ) {
     const currentTime = moment().format("YYYY-MM-DD HH:mm:ss");
+    const newQueryId = uuidv4();
     //TODO handle first query
     if (currentQueryIndex === null) {
-      // updateQueryStartTime(startTime);
-      // updateQueryCounting(true);
+      //TODO: Add new query
       addBingQuery({
-        queryId: uuidv4(),
+        queryId: newQueryId,
         query: inputPrompt,
         queryTime: [currentTime],
         clickedLinks: [],
@@ -108,15 +108,17 @@ export default function BingSearch() {
       });
       updateCurrentQueryIndex(0);
     } else {
+      //TODO: End previous link
+      handleEndPrevLink(currentTime);
+      //TODO: Add new query
       addBingQuery({
-        queryId: uuidv4(),
+        queryId: newQueryId,
         query: inputPrompt,
         queryTime: [currentTime],
         clickedLinks: [],
         cachedLinks,
       });
-      updateCurrentQueryIndex(currentQueryIndex + 1);
-      handleEndPrevLink(currentTime);
+      updateCurrentQueryIndex(bingQueries.length - 1);
     }
   }
 
@@ -240,7 +242,7 @@ export default function BingSearch() {
             variant="contained"
             onClick={async () => {
               const result = await handleSearch(inputPrompt);
-              await handleQueryHistory(inputPrompt, result);
+              handleQueryHistory(inputPrompt, result);
               //  Remove the prompt after submit
               setInputPrompt("");
             }}

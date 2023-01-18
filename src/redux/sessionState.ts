@@ -44,6 +44,7 @@ export interface IUseSessionState {
     update: Partial<IClickedLink>
   ) => void;
   chatgptQueries: IChatGPTQuery[];
+  addChatgptQuery: (newQuery: IChatGPTQuery) => void;
   updateChatgptQueries: (
     queryId: string,
     upate: Partial<IChatGPTQuery>
@@ -90,8 +91,8 @@ export const useSessionState = create<IUseSessionState>()(
             "updateEndTimestamp"
           );
         },
-        // searchUnit: Randomizer.randomSearchUnitAssignment(),
-        searchUnit: "Bing",
+        searchUnit: Randomizer.randomSearchUnitAssignment(),
+        // searchUnit: "ChatGPT",
         selectedDimensions: ["cargo_space", "length"],
         groundTruth: productSamples,
         productMatrix: cleanedProductSamples,
@@ -215,6 +216,16 @@ export const useSessionState = create<IUseSessionState>()(
           );
         },
         chatgptQueries: [],
+        addChatgptQuery: (newQuery) => {
+          set(
+            (state) => ({
+              ...state,
+              chatgptQueries: [...state.chatgptQueries, newQuery],
+            }),
+            false,
+            "addChatgptQuery"
+          );
+        },
         updateChatgptQueries: (queryId, update) => {
           set(
             (state) => ({

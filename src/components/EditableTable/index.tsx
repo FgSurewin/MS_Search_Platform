@@ -17,13 +17,14 @@ import { IProductDimension, IProductMatrixInput } from "../../types";
 import moment from "moment";
 
 export default function EditableTable() {
+  const seesionState = useSessionState();
   const {
     selectedDimensions,
     productMatrix,
     updateProductMatrix,
     finalDecision,
     updateFinalDecision,
-  } = useSessionState();
+  } = seesionState;
 
   const naviagte = useNavigate();
   const [open, setOpen] = React.useState(false);
@@ -31,6 +32,7 @@ export default function EditableTable() {
   const handleClickOpen = (product: string) => {
     setOpen(true);
     updateFinalDecision(product);
+    console.log(seesionState);
   };
 
   const handleClose = () => {

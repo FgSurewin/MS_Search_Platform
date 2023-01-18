@@ -147,6 +147,7 @@ export interface IChatGPTQuery {
   queryId: string;
   query: string;
   queryTime: string[];
-  answer: string;
-  duration:number[]
+  answer: IChoice;
+  usage: IUsage;
+  duration: number[];
 }
