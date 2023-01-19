@@ -10,6 +10,7 @@ import {
   IBingQuery,
   IClickedLink,
   IProductMatrixInput,
+  IProductMatrixDimension,
 } from "../types";
 import { Randomizer } from "../utils/randomizer";
 
@@ -27,7 +28,7 @@ export interface IUseSessionState {
   productMatrix: IProductMatrix[];
   updateProductMatrix: (
     model: string,
-    dimension: IProductDimension,
+    dimension: IProductMatrixDimension,
     update: Partial<IProductMatrixInput>
   ) => void;
   finalDecision: string;
@@ -51,10 +52,30 @@ export interface IUseSessionState {
   ) => void;
 }
 
+const samples_data = [
+  {
+    make: "Toyota",
+    model: "RAV4",
+    trim: "LE FWD",
+    cargo_space: 69.8,
+    length: 180.9,
+    ratio: 0.39,
+  },
+  {
+    make: "Kia",
+    model: "Sportage",
+    trim: "LX FWD",
+    cargo_space: 60.1,
+    length: 176.4,
+    ratio: 0.34,
+  },
+];
+
 export const useSessionState = create<IUseSessionState>()(
   devtools(
     (set) => {
-      const productSamples = Randomizer.sampkingProducts(2);
+      // const productSamples = Randomizer.sampkingProducts(2);
+      const productSamples = samples_data;
       const cleanedProductSamples = cleanProductInfo(productSamples);
       return {
         workerId: "worker",
@@ -261,6 +282,11 @@ function cleanProductInfo(products: IProduct[]): IProductMatrix[] {
       inputTime: "",
     },
     length: {
+      value: 0,
+      lastQueryId: null,
+      inputTime: "",
+    },
+    ratio: {
       value: 0,
       lastQueryId: null,
       inputTime: "",

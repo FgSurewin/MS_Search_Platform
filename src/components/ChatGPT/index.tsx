@@ -259,7 +259,7 @@ export default function ChatGPTPage() {
           </Button>
           <TextField
             id="ChatGPT-Text-Field"
-            label="ChatGPT"
+            label="This is an AI chatbot for you to use"
             multiline
             rows={2}
             value={inputPrompt}

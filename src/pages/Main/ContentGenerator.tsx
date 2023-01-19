@@ -22,7 +22,8 @@ export default function ContentGenerator({
             variant="body1"
             sx={{
               display: "inline-block",
-              textDecoration: "underline",
+              // textDecoration: "underline",
+              // border: "1px solid black",
               pr: 1,
               fontWeight: "bolder",
             }}
@@ -49,9 +50,10 @@ export default function ContentGenerator({
           variant="body1"
           sx={{
             display: "inline-block",
-            textDecoration: "underline",
+            // textDecoration: "underline",
             pl: 1,
             fontWeight: "bolder",
+            // border: "1px solid black",
           }}
           component="span"
         >

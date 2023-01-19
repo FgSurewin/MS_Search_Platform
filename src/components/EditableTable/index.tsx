@@ -12,21 +12,24 @@ import {
 import { useSessionState } from "../../redux/sessionState";
 import { useThemeState } from "../../redux/themeState";
 import BasicDialog from "../Dialog/BasicDialog";
-import { useNavigate } from "react-router-dom";
-import { IProductDimension, IProductMatrixInput } from "../../types";
+// import { useNavigate } from "react-router-dom";
+import {  IProductMatrixDimension, IProductMatrixInput } from "../../types";
 import moment from "moment";
+import { useFeedbackState } from "../../redux/feedbackState";
+
+const productDimensions: IProductMatrixDimension[] = ["cargo_space", "length", "ratio"]
 
 export default function EditableTable() {
   const seesionState = useSessionState();
   const {
-    selectedDimensions,
     productMatrix,
     updateProductMatrix,
     finalDecision,
     updateFinalDecision,
   } = seesionState;
+  const { setIsOpen } = useFeedbackState();
 
-  const naviagte = useNavigate();
+  // const naviagte = useNavigate();
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = (product: string) => {
@@ -41,7 +44,8 @@ export default function EditableTable() {
 
   const handleSubmit = () => {
     setOpen(false);
-    naviagte("/survey");
+    setIsOpen(true);
+    // naviagte("/survey");
   };
 
   return (
@@ -53,12 +57,11 @@ export default function EditableTable() {
         <TableHead>
           <TableRow>
             <TableCell>Product</TableCell>
-            {selectedDimensions.map((dimension, index) => (
+            {productDimensions.map((dimension, index) => (
               <TableCell key={index} align="center">
                 {dimension.split("_").join(" ")}
               </TableCell>
             ))}
-            <TableCell>Ratio</TableCell>
             <TableCell>Decision</TableCell>
           </TableRow>
         </TableHead>
@@ -66,12 +69,12 @@ export default function EditableTable() {
           {productMatrix.map((product, index) => (
             <TableRow
               key={`${product.model} + ${index}`}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              // sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
               <TableCell component="th" scope="row">
-                {product.model}
+                {`${product.make} ${product.model}`}
               </TableCell>
-              {selectedDimensions.map((dimension, index) => (
+              {productDimensions.map((dimension, index) => (
                 <TableCell
                   key={`${product.model} + ${dimension} + ${index}`}
                   align="center"
@@ -84,19 +87,19 @@ export default function EditableTable() {
                   />
                 </TableCell>
               ))}
-              <TableCell component="th" scope="row" align="center">
+              {/* <TableCell component="th" scope="row" align="center">
                 {product.cargo_space.value > 0 && product.length.value > 0
                   ? (product.cargo_space.value / product.length.value).toFixed(
                       3
                     )
                   : ""}
-              </TableCell>
+              </TableCell> */}
               <TableCell component="th" scope="row" align="center">
                 <Button
                   variant="contained"
-                  onClick={() => handleClickOpen(product.model)}
+                  onClick={() => handleClickOpen(`${product.make} ${product.model}`)}
                 >
-                  Buy
+                  Choose
                 </Button>
               </TableCell>
             </TableRow>
@@ -118,10 +121,10 @@ export default function EditableTable() {
 export interface IEditableTableCellProps {
   initValue: string | number;
   productName: string;
-  dimension: IProductDimension;
+  dimension: IProductMatrixDimension;
   updateProductMatrix: (
     model: string,
-    dimension: IProductDimension,
+    dimension: IProductMatrixDimension,
     update: Partial<IProductMatrixInput>
   ) => void;
 }

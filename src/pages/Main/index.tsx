@@ -6,9 +6,12 @@ import TablePanel from "./TablePanel";
 import { useSessionState } from "../../redux/sessionState";
 import BingSearch from "../../components/BingSearch";
 import ChatGPT from "../../components/ChatGPT";
+import { useFeedbackState } from "../../redux/feedbackState";
+import Feedback from "../../components/Feedback";
 
 export default function MainPage() {
   const { searchUnit } = useSessionState();
+  const { isOpen } = useFeedbackState();
   return (
     <Paper component="section">
       <Grid container>
@@ -40,7 +43,13 @@ export default function MainPage() {
             overflowY: "auto",
           }}
         >
-          {searchUnit === "Bing" ? <BingSearch /> : <ChatGPT />}
+          {isOpen ? (
+            <Feedback />
+          ) : searchUnit === "Bing" ? (
+            <BingSearch />
+          ) : (
+            <ChatGPT />
+          )}
         </Grid>
       </Grid>
     </Paper>

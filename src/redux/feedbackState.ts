@@ -1,26 +1,26 @@
 import create from "zustand";
 import { devtools } from "zustand/middleware";
 
-export interface IUseThemeState {
-  mode: "light" | "dark";
-  setMode: (mode: "light" | "dark") => void;
+export interface IUseFeedbackState {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
 }
 
-export const useThemeState = create<IUseThemeState>()(
+export const useFeedbackState = create<IUseFeedbackState>()(
   devtools(
     (set) => ({
-      mode: "light",
-      setMode: (mode) => {
+      isOpen: false,
+      setIsOpen: (isOpen) => {
         set(
           (state) => ({
             ...state,
-            mode,
+            isOpen,
           }),
           false,
-          "setMode"
+          "setIsOpen"
         );
       },
     }),
-    { name: "ThemeState" }
+    { name: "FeedbackState" }
   )
 );

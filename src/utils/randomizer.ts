@@ -1,5 +1,5 @@
 import { ISearchUnit } from "../types";
-import data from "../assets/table.json";
+import data from "../assets/new_table.json";
 import _ from "lodash";
 
 export class Randomizer {

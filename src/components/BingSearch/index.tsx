@@ -231,7 +231,7 @@ export default function BingSearch() {
           </Button>
           <TextField
             id="Bing-Search-Text-Field"
-            label="Bing Search"
+            label="This is a search engine for you to use"
             multiline
             rows={2}
             value={inputPrompt}

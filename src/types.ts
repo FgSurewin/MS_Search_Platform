@@ -107,6 +107,7 @@ export interface IProduct {
   trim: string;
   cargo_space: number;
   length: number;
+  ratio: number;
 }
 
 // export type IProductDimension = keyof IProduct;
@@ -114,9 +115,9 @@ export type IProductDimension = "cargo_space" | "length";
 
 /* --------------------------- Session State Types -------------------------- */
 export interface IProductMatrixInput {
-    value: number;
-    lastQueryId: string | null;
-    inputTime: string;
+  value: number;
+  lastQueryId: string | null;
+  inputTime: string;
 }
 
 export interface IProductMatrix {
@@ -125,7 +126,10 @@ export interface IProductMatrix {
   trim: string;
   cargo_space: IProductMatrixInput;
   length: IProductMatrixInput;
+  ratio: IProductMatrixInput;
 }
+
+export type IProductMatrixDimension = "cargo_space" | "length" | "ratio";
 
 export interface IClickedLink {
   linkId: string;
