@@ -51,7 +51,7 @@ export default function EditableTable() {
   return (
     <TableContainer component={Box}>
       <Table
-        sx={{ width: { xs: "100%", sm: "80%" }, m: "auto", mt: 6 }}
+        sx={{ width: { xs: "100%", sm: "100%" }, m: "auto" }}
         aria-label="simple table"
       >
         <TableHead>
@@ -62,7 +62,7 @@ export default function EditableTable() {
                 {dimension.split("_").join(" ")}
               </TableCell>
             ))}
-            <TableCell>Decision</TableCell>
+            <TableCell align="center">Decision</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -97,7 +97,9 @@ export default function EditableTable() {
               <TableCell component="th" scope="row" align="center">
                 <Button
                   variant="contained"
-                  onClick={() => handleClickOpen(`${product.make} ${product.model}`)}
+                  onClick={() =>
+                    handleClickOpen(`${product.make} ${product.model}`)
+                  }
                 >
                   Choose
                 </Button>

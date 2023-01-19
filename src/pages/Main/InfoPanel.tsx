@@ -1,18 +1,18 @@
 import React from "react";
-import { Box, Stack, Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import ContentGenerator from "./ContentGenerator";
-import AttentionGenerator from "./AttentionGenerator";
-import { attentionText } from "./data";
+// import AttentionGenerator from "./AttentionGenerator";
+// import { attentionText } from "./data";
 import { useSessionState } from "../../redux/sessionState";
 
 // const products = ["product1", "product2", "product3", "product4", "product5"];
 // const dimensions = ["cargo space", "length"];
 
 export default function InfoPanel() {
-  const { selectedDimensions, groundTruth } = useSessionState();
+  const { groundTruth } = useSessionState();
   return (
     <Stack sx={{ px: 4, mb: 1 }} direction="column">
-      <Typography variant="h5" sx={{ mb: 2, fontWeight: "bolder" }}>
+      <Typography variant="h5" sx={{ mt: 2, mb: 2, fontWeight: "bolder" }}>
         Task 1 of 5:
       </Typography>
       {/* <Typography variant="h5" sx={{ mb: 2, fontWeight: "bolder" }}>
@@ -27,12 +27,12 @@ export default function InfoPanel() {
         end="."
       /> */}
       <ContentGenerator
-        pretext="You are making a choice between the "
+        pretext="You are making a choice between "
         items={groundTruth.map(
           (product) => `2020 ${product.make} ${product.model}`
         )}
-        conjunction="or"
-        end="?"
+        conjunction="and"
+        end="."
       />
       <Typography variant="body1" sx={{ mt: 2, mb: 2 }}>
         Your goal is to choose the SUV that has the{" "}
@@ -51,7 +51,7 @@ export default function InfoPanel() {
         front to back of the car. This is typically measured in inches.
       </Typography>
       <ContentGenerator
-        pretext="Which has the larger total cargo space to total length ratio, the "
+        pretext="Which has the larger total cargo space to total length ratio, "
         items={groundTruth.map(
           (product) => `2020 ${product.make} ${product.model}`
         )}

@@ -24,12 +24,12 @@ export default function ContentGenerator({
               display: "inline-block",
               // textDecoration: "underline",
               // border: "1px solid black",
-              pr: 1,
-              fontWeight: "bolder",
+              // pr: 1,
+              // fontWeight: "bolder",
             }}
             component="span"
           >
-            {item}
+            the <b>{item}</b>
             <Typography
               variant="body1"
               sx={{ display: "inline-block" }}
@@ -51,13 +51,13 @@ export default function ContentGenerator({
           sx={{
             display: "inline-block",
             // textDecoration: "underline",
-            pl: 1,
-            fontWeight: "bolder",
+            pl: 0.5,
+            // fontWeight: "bolder",
             // border: "1px solid black",
           }}
           component="span"
         >
-          {items[items.length - 1]}
+          the <b>{items[items.length - 1]}</b>
         </Typography>
         <Typography
           variant="body1"

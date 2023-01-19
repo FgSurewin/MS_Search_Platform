@@ -22,7 +22,7 @@ export default function TablePanel() {
         above criteria, <b>click the corresponding “Choose” button</b> in the
         table below.
       </Typography>
-      <Typography variant="body1" sx={{ mb: 2 }}>
+      <Typography variant="body1" sx={{ mb: 1 }}>
         Feel free to{" "}
         <b>
           use the table below to keep track of the information you search for
