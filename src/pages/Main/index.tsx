@@ -8,14 +8,30 @@ import BingSearch from "../../components/BingSearch";
 import ChatGPT from "../../components/ChatGPT";
 import { useFeedbackState } from "../../redux/feedbackState";
 import Feedback from "../../components/Feedback";
+import { useAssignmentState } from "../../redux/assignmentState";
+import moment from "moment";
 
 export default function MainPage() {
   const { searchUnit } = useSessionState();
   const { isOpen } = useFeedbackState();
+  const { initSessionState } = useSessionState();
+  const { product_pairs, curr_task_idx, search_unit } = useAssignmentState();
+
+  React.useEffect(() => {
+    initSessionState({
+      groundTruth: product_pairs[curr_task_idx],
+      searchUnit: search_unit,
+      workerId: "test_worker",
+      taskNum: (curr_task_idx + 1).toString(),
+      selectedDimensions: ["cargo_space", "length"],
+      startTimestamp: moment().format("YYYY-MM-DD HH:mm:ss"),
+    });
+  }, [initSessionState, curr_task_idx, product_pairs, search_unit]);
+
   return (
     <Paper component="section">
       <Grid container>
-        <Grid xs={12} sm={6} direction="column">
+        <Grid xs={12} sm={6} direction="column" sx={{ position: "relative" }}>
           <Grid xs={12}>
             <InfoPanel />
           </Grid>
@@ -28,6 +44,20 @@ export default function MainPage() {
           <Grid xs={12}>
             <TablePanel />
           </Grid>
+          {isOpen && (
+            <Grid
+              xs={12}
+              sx={{
+                width: "100%",
+                height: "100%",
+                position: "absolute",
+                zIndex: 1000,
+                background: "rgba(255, 255, 255, 0.6)",
+                top: 0,
+                left: 0,
+              }}
+            ></Grid>
+          )}
         </Grid>
         <Grid
           component={Divider}

@@ -3,7 +3,8 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { useThemeState } from "./redux/themeState";
 import ThemeToggler from "./components/ThemeToggler";
-import { Outlet } from "react-router-dom";
+import Environment from "./pages/Environment";
+// import { Outlet } from "react-router-dom";
 
 function App() {
   const { mode } = useThemeState();
@@ -21,7 +22,8 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <ThemeToggler />
-      <Outlet />
+      {/* <Outlet /> */}
+      <Environment />
     </ThemeProvider>
   );
 }

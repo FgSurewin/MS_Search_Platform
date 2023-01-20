@@ -12,15 +12,12 @@ import {
   IProductMatrixInput,
   IProductMatrixDimension,
 } from "../types";
-import { Randomizer } from "../utils/randomizer";
 
 export interface IUseSessionState {
   workerId: string;
-  updateWorkerId: (value: string) => void;
-  scenarioId: string;
+  taskNum: string;
   searchUnit: ISearchUnit;
   startTimestamp: string;
-  updateStartTimestamp: (value: string) => void;
   endTimestamp: string;
   updateEndTimestamp: (value: string) => void;
   selectedDimensions: IProductDimension[];
@@ -50,57 +47,45 @@ export interface IUseSessionState {
     queryId: string,
     upate: Partial<IChatGPTQuery>
   ) => void;
+  initSessionState: (setting: {
+    workerId: string;
+    taskNum: string;
+    searchUnit: ISearchUnit;
+    startTimestamp: string;
+    selectedDimensions: IProductDimension[];
+    groundTruth: IProduct[];
+  }) => void;
 }
 
-const samples_data = [
-  {
-    make: "Toyota",
-    model: "RAV4",
-    trim: "LE FWD",
-    cargo_space: 69.8,
-    length: 180.9,
-    ratio: 0.39,
-  },
-  {
-    make: "Kia",
-    model: "Sportage",
-    trim: "LX FWD",
-    cargo_space: 60.1,
-    length: 176.4,
-    ratio: 0.34,
-  },
-];
+// const samples_data = [
+//   {
+//     make: "Toyota",
+//     model: "RAV4",
+//     trim: "LE FWD",
+//     cargo_space: 69.8,
+//     length: 180.9,
+//     ratio: 0.39,
+//   },
+//   {
+//     make: "Kia",
+//     model: "Sportage",
+//     trim: "LX FWD",
+//     cargo_space: 60.1,
+//     length: 176.4,
+//     ratio: 0.34,
+//   },
+// ];
 
 export const useSessionState = create<IUseSessionState>()(
   devtools(
     (set) => {
       // const productSamples = Randomizer.sampkingProducts(2);
-      const productSamples = samples_data;
-      const cleanedProductSamples = cleanProductInfo(productSamples);
+      // const productSamples = samples_data;
+      // const cleanedProductSamples = cleanProductInfo(productSamples);
       return {
         workerId: "worker",
-        updateWorkerId: (value) => {
-          set(
-            (state) => ({
-              ...state,
-              workerId: value,
-            }),
-            false,
-            "updateWorkerId"
-          );
-        },
-        scenarioId: "scenario",
-        startTimestamp: moment().format("YYYY-MM-DD HH:mm:ss"),
-        updateStartTimestamp: (value) => {
-          set(
-            (state) => ({
-              ...state,
-              startTimestamp: value,
-            }),
-            false,
-            "updateStartTimestamp"
-          );
-        },
+        taskNum: "scenario",
+        startTimestamp: "",
         endTimestamp: "",
         updateEndTimestamp: (value) => {
           set(
@@ -112,11 +97,11 @@ export const useSessionState = create<IUseSessionState>()(
             "updateEndTimestamp"
           );
         },
-        searchUnit: Randomizer.randomSearchUnitAssignment(),
+        searchUnit: "Bing",
         // searchUnit: "ChatGPT",
         selectedDimensions: ["cargo_space", "length"],
-        groundTruth: productSamples,
-        productMatrix: cleanedProductSamples,
+        groundTruth: [],
+        productMatrix: [],
         updateProductMatrix: (model, dimension, update) => {
           set(
             (state) => {
@@ -263,6 +248,26 @@ export const useSessionState = create<IUseSessionState>()(
             }),
             false,
             "updateChatgptQueries"
+          );
+        },
+        initSessionState: (setting) => {
+          set(
+            (state) => ({
+              ...state,
+              workerId: setting.workerId,
+              taskNum: setting.taskNum,
+              searchUnit: setting.searchUnit,
+              selectedDimensions: setting.selectedDimensions,
+              startTimestamp: moment().format("YYYY-MM-DD HH:mm:ss"),
+              groundTruth: setting.groundTruth,
+              productMatrix: cleanProductInfo(setting.groundTruth),
+              bingQueries: [],
+              chatgptQueries: [],
+              finalDecision: "",
+              currentQueryIndex: null,
+            }),
+            false,
+            "initSessionState"
           );
         },
       };

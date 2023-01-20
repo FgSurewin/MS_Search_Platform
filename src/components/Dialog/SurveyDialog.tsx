@@ -20,43 +20,48 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export interface IBasicDialogProps {
+export interface ISurveyDialogProps {
   open: boolean;
   handleClose: () => void;
-  handleSubmit: () => void;
   title: string;
-  finalDecision: string;
+  code: string;
 }
 
-export default function BasicDialog({
+export default function SurveyDialog({
   open,
   handleClose,
   title,
-  finalDecision,
-  handleSubmit,
-}: IBasicDialogProps) {
+  code,
+}: ISurveyDialogProps) {
   return (
     <Dialog
       open={open}
       TransitionComponent={Transition}
       keepMounted
       onClose={handleClose}
-      aria-describedby="alert-dialog-slide-description"
+      aria-describedby="dialog-slide-description"
     >
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
-        <DialogContentText id="alert-dialog-slide-description">
+        <DialogContentText id="dialog-slide-description">
           <Typography variant="body1" component="span">
-            You selected the 2020 <b>{finalDecision}</b>. Please confirm that
-            this is the option with the larger total cargo space to total length
-            ratio.
+            Congrats! You have already completed all the tasks. Please copy the
+            survey code below and paste it in the survey form. Once you have
+            submitted the survey, you can click the button below to close this
+            page.
+          </Typography>
+          <Typography
+            variant="body1"
+            component="span"
+            sx={{ textAlign: "center", display: "block" }}
+          >
+            {code}
           </Typography>
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleSubmit}>Confirm</Button>
         <Button color="error" onClick={handleClose}>
-          Go back
+          Close this page
         </Button>
       </DialogActions>
     </Dialog>

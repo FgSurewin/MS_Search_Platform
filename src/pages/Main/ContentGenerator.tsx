@@ -22,10 +22,6 @@ export default function ContentGenerator({
             variant="body1"
             sx={{
               display: "inline-block",
-              // textDecoration: "underline",
-              // border: "1px solid black",
-              // pr: 1,
-              // fontWeight: "bolder",
             }}
             component="span"
           >
@@ -52,8 +48,6 @@ export default function ContentGenerator({
             display: "inline-block",
             // textDecoration: "underline",
             pl: 0.5,
-            // fontWeight: "bolder",
-            // border: "1px solid black",
           }}
           component="span"
         >

@@ -35,7 +35,7 @@ export default function EditableTable() {
   const handleClickOpen = (product: string) => {
     setOpen(true);
     updateFinalDecision(product);
-    console.log(seesionState);
+
   };
 
   const handleClose = () => {
@@ -43,6 +43,8 @@ export default function EditableTable() {
   };
 
   const handleSubmit = () => {
+    //TODO: Add current task to assignment state
+    console.log(seesionState);
     setOpen(false);
     setIsOpen(true);
     // naviagte("/survey");
@@ -87,13 +89,6 @@ export default function EditableTable() {
                   />
                 </TableCell>
               ))}
-              {/* <TableCell component="th" scope="row" align="center">
-                {product.cargo_space.value > 0 && product.length.value > 0
-                  ? (product.cargo_space.value / product.length.value).toFixed(
-                      3
-                    )
-                  : ""}
-              </TableCell> */}
               <TableCell component="th" scope="row" align="center">
                 <Button
                   variant="contained"
@@ -112,7 +107,7 @@ export default function EditableTable() {
         open={open}
         handleClose={handleClose}
         title="Confirmation"
-        description="Have you decided to buy"
+        // description="Have you decided to buy"
         finalDecision={finalDecision}
         handleSubmit={handleSubmit}
       />

@@ -23,7 +23,7 @@ export default function FeedbackTable() {
   return (
     <TableContainer component={Box}>
       <Table
-        sx={{ width: { xs: "100%", sm: "80%" }, m: "auto", mt: 6 }}
+        sx={{ width: { xs: "100%", sm: "80%" }, m: "auto", mt: 2 }}
         aria-label="simple table"
       >
         <TableHead>

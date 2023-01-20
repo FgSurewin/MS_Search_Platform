@@ -4,28 +4,19 @@ import ContentGenerator from "./ContentGenerator";
 // import AttentionGenerator from "./AttentionGenerator";
 // import { attentionText } from "./data";
 import { useSessionState } from "../../redux/sessionState";
+import { useAssignmentState } from "../../redux/assignmentState";
 
 // const products = ["product1", "product2", "product3", "product4", "product5"];
 // const dimensions = ["cargo space", "length"];
 
 export default function InfoPanel() {
   const { groundTruth } = useSessionState();
+  const { curr_task_idx, product_pairs } = useAssignmentState();
   return (
     <Stack sx={{ px: 4, mb: 1 }} direction="column">
       <Typography variant="h5" sx={{ mt: 2, mb: 2, fontWeight: "bolder" }}>
-        Task 1 of 5:
+        Task {curr_task_idx + 1} of {product_pairs.length}:
       </Typography>
-      {/* <Typography variant="h5" sx={{ mb: 2, fontWeight: "bolder" }}>
-        Scenario Information:
-      </Typography> */}
-      {/* <ContentGenerator
-        pretext="You are interested in"
-        items={selectedDimensions.map((dimension) =>
-          dimension.replace("_", " ")
-        )}
-        conjunction="and"
-        end="."
-      /> */}
       <ContentGenerator
         pretext="You are making a choice between "
         items={groundTruth.map(
@@ -58,15 +49,6 @@ export default function InfoPanel() {
         conjunction="or"
         end="?"
       />
-      {/* <Box sx={{ mt: 4 }}>
-        {attentionText.map((text, index) => (
-          <AttentionGenerator
-            key={index}
-            rowNumber={text.rowNumber}
-            text={text.text}
-          />
-        ))}
-      </Box> */}
     </Stack>
   );
 }
